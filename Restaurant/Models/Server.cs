@@ -11,12 +11,12 @@ namespace Restaurant.Models
     {
         private Cook cook;
         List<string> resultOfCooks;
-        HashSet<string> customers;
+        HashSet<string> customers; //TODO: We don't need this customers variable.
         private TableRequests tableRequests;
         Boolean sendedToCook = false;
         Boolean served = false;
         public delegate void StopGetOrderDelegate(TableRequests table);
-        public event StopGetOrderDelegate StopOrders;
+        public event StopGetOrderDelegate StopOrders;//TODO: Is it Ready event? If yes, please rename it.
 
         public Server()
         {
@@ -38,7 +38,7 @@ namespace Restaurant.Models
 
             if (eggQuantity > 0)
             {
-               egg = tableRequests.Add<Egg>(customerName);
+                egg = tableRequests.Add<Egg>(customerName);
             }
             if (drink is Drinks)
             {
@@ -64,6 +64,7 @@ namespace Restaurant.Models
             return egg;
         }
 
+        //TODO: Refactor this method to be smaller.
         public void SendToCook()
         {
             if (sendedToCook)
@@ -72,6 +73,8 @@ namespace Restaurant.Models
             }
             sendedToCook = true;
             StopOrders?.Invoke(tableRequests);
+
+            //TODO: You can move this part of code into Serve method, since it's related with serving
             foreach (var customer in customers)
             {
                 var orders = tableRequests[customer];

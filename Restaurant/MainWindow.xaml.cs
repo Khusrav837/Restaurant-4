@@ -20,6 +20,10 @@ namespace Restaurant
             drinks.Items.Add(Drinks.Coca_Cola);
         }
 
+        //TODO: Please fix these issues:
+        //I ordered 10 chickens, 12 eggs. But, after serving them to the customer it showing 1 chicken, 1 egg on the ResultBox. 
+        //I tried to receive orders after served to customers. But it says "Customers already served!"
+        //There are 2 customers at the table. All of them ordered, but in resultbox only 1st of them shown.
         private void getOrder_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -46,13 +50,13 @@ namespace Restaurant
                     throw new Exception("customerName Error!");
                 }
 
-               var egg = Server.Receive(customer, quantityChicken, quantityEgg, drink);
-               if (egg != null)
+                var egg = Server.Receive(customer, quantityChicken, quantityEgg, drink);
+                if (egg != null)
                 {
                     eggQuality.Content = $"Egg Quality: {egg.GetQuality()}";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Results.Items.Add(ex.Message);
             }
@@ -64,10 +68,10 @@ namespace Restaurant
             {
                 Server.SendToCook();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Results.Items.Add(ex.Message);
-            } 
+            }
         }
 
         private void Serve_Click(object sender, RoutedEventArgs e)
@@ -81,7 +85,7 @@ namespace Restaurant
                 }
                 Results.Items.Add("Please enjoy your food!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Results.Items.Add(ex.Message);
             }

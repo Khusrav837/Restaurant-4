@@ -26,13 +26,13 @@ namespace Restaurant.Moels
         }
 
 
-        public Egg(int quantity) 
+        public Egg(int quantity)
         {
             Random rand = new Random();
             this.Quality = rand.Next(101);
             this.Quantity = quantity;
         }
-        
+
         public int GetQuality()
         {
             return this.Quality;
@@ -45,13 +45,12 @@ namespace Restaurant.Moels
                 throw new Exception("Quality is less!");
             }
         }
-        
-        //This method should be called in the Dispose() method, in this Egg class.
+
         public void DiscardShell() { }
 
         protected void Dispose(bool disposing)
         {
-            if(!this.IsDisposed)
+            if (!this.IsDisposed)
             {
                 this.DiscardShell();
                 if (disposing)
@@ -69,11 +68,11 @@ namespace Restaurant.Moels
             GC.SuppressFinalize(this);
         }
 
-        public override void Cook() {}
+        public override void Cook() { }
 
-        public override void Obtain() {}
+        public override void Obtain() { }
 
-        public override void Serve() {}
+        public override void Serve() { }
 
         ~Egg()
         {

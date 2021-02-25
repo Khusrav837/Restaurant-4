@@ -9,8 +9,11 @@ namespace Restaurant.Models
 {
     public class Cook
     {
+        //TODO: Cook should have Processed event 
+        //TODO: Refactor this method to be smaller.
         public void Process(TableRequests table)
         {
+            //TODO: You should use table.Get method to get list of foods
             foreach (List<IMenuItem> items in table)
             {
                 foreach (var o in items)
@@ -43,7 +46,7 @@ namespace Restaurant.Models
                         drink.Obtain();
                     }
                 }
-            }            
+            }
         }
     }
 }

@@ -8,16 +8,17 @@ namespace Restaurant.Models
 {
     public class TableRequests : IEnumerable
     {
-        
+
         Dictionary<string, List<IMenuItem>> items = new Dictionary<string, List<IMenuItem>>();
         Type[] ordersType = new Type[] { typeof(Drink), typeof(Chicken), typeof(Egg) };
 
-
+        //TODO: It's not good solution id this methos return Egg instance. 
+        //TODO: Refactor this method to be smaller.
         public Egg Add<OrderType>(string customerName)
         {
             Egg egg = null;
-           if (typeof(OrderType) == typeof(Chicken))
-           {
+            if (typeof(OrderType) == typeof(Chicken))
+            {
                 if (items.ContainsKey(customerName))
                 {
                     items[customerName].Add(new Chicken(1));
@@ -26,9 +27,9 @@ namespace Restaurant.Models
                 {
                     items.Add(customerName, new List<IMenuItem> { new Chicken(1) });
                 }
-           }
-           else if (typeof(OrderType) == typeof(Egg))
-           {
+            }
+            else if (typeof(OrderType) == typeof(Egg))
+            {
                 egg = new Egg(1);
                 if (items.ContainsKey(customerName))
                 {
@@ -38,8 +39,8 @@ namespace Restaurant.Models
                 {
                     items.Add(customerName, new List<IMenuItem> { egg });
                 }
-           }
-           else if (typeof(OrderType) == typeof(Coca_Cola))
+            }
+            else if (typeof(OrderType) == typeof(Coca_Cola))
             {
                 if (items.ContainsKey(customerName))
                 {
@@ -50,7 +51,7 @@ namespace Restaurant.Models
                     items.Add(customerName, new List<IMenuItem> { new Coca_Cola() });
                 }
             }
-           else if (typeof(OrderType) == typeof(Juice))
+            else if (typeof(OrderType) == typeof(Juice))
             {
                 if (items.ContainsKey(customerName))
                 {
@@ -61,7 +62,7 @@ namespace Restaurant.Models
                     items.Add(customerName, new List<IMenuItem> { new Juice() });
                 }
             }
-           else if (typeof(OrderType) == typeof(Tea))
+            else if (typeof(OrderType) == typeof(Tea))
             {
                 if (items.ContainsKey(customerName))
                 {
@@ -72,7 +73,7 @@ namespace Restaurant.Models
                     items.Add(customerName, new List<IMenuItem> { new Tea() });
                 }
             }
-           else if (typeof(OrderType) == typeof(RC_Cola))
+            else if (typeof(OrderType) == typeof(RC_Cola))
             {
                 if (items.ContainsKey(customerName))
                 {
@@ -85,29 +86,30 @@ namespace Restaurant.Models
             }
             return egg;
         }
-        
-        public List<IMenuItem> this [string customerName]
+
+        public List<IMenuItem> this[string customerName]
         {
-            get 
+            get
             {
                 return this.items[customerName];
             }
         }
 
+        //TODO: according to the presentation this method should be like this: Get<ChickenOrder>()
         public List<IMenuItem> Get(Type OrderType)
         {
             List<IMenuItem> orders = new List<IMenuItem>();
 
-            foreach (KeyValuePair<string,List<IMenuItem>> item in items)
+            foreach (KeyValuePair<string, List<IMenuItem>> item in items)
             {
-               orders.AddRange(item.Value.FindAll(i => i.GetType() == OrderType));
+                orders.AddRange(item.Value.FindAll(i => i.GetType() == OrderType));
             }
             return orders;
         }
 
         public IEnumerator GetEnumerator()
         {
-            for (int i = 0; i < ordersType.Length; i++ )
+            for (int i = 0; i < ordersType.Length; i++)
             {
                 yield return this.Get(ordersType[i]);
             }
