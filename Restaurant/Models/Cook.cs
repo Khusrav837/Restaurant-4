@@ -9,44 +9,42 @@ namespace Restaurant.Models
 {
     public class Cook
     {
-        //TODO: Cook should have Processed event 
-        //TODO: Refactor this method to be smaller.
+        public delegate void ProcessedDelegate(TableRequests table);
+        public event ProcessedDelegate Processed;
         public void Process(TableRequests table)
         {
-            //TODO: You should use table.Get method to get list of foods
-            foreach (List<IMenuItem> items in table)
+            var drinks = table.Get<Drink>();
+            foreach (var drink in drinks)
             {
-                foreach (var o in items)
+                drink.Obtain();
+            }
+
+            var eggs = table.Get<Egg>();
+            foreach (var o in eggs)
+            {
+                using (var egg = (Egg)o)
                 {
-                    if (o is Chicken)
+                    egg.Obtain();
+                    try
                     {
-                        var chicken = (Chicken)o;
-                        chicken.Obtain();
-                        chicken.CutUp();
-                        chicken.Cook();
+                        egg.Crack();
                     }
-                    else if (o is Egg)
+                    catch
                     {
-                        using (var egg = (Egg)o)
-                        {
-                            egg.Obtain();
-                            try
-                            {
-                                egg.Crack();
-                            }
-                            catch
-                            {
-                            }
-                            egg.Cook();
-                        }
                     }
-                    else if (o is Drink)
-                    {
-                        var drink = (Drink)o;
-                        drink.Obtain();
-                    }
+                    egg.Cook();
                 }
             }
+
+            var chickens = table.Get<Chicken>();
+            foreach (Chicken chicken in chickens)
+            {
+                chicken.Obtain();
+                chicken.CutUp();
+                chicken.Cook();
+            }
+
+            Processed?.Invoke(table);
         }
     }
 }

@@ -50,11 +50,7 @@ namespace Restaurant
                     throw new Exception("customerName Error!");
                 }
 
-                var egg = Server.Receive(customer, quantityChicken, quantityEgg, drink);
-                if (egg != null)
-                {
-                    eggQuality.Content = $"Egg Quality: {egg.GetQuality()}";
-                }
+                Server.Receive(customer, quantityChicken, quantityEgg, drink);
             }
             catch (Exception ex)
             {

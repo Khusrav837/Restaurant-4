@@ -3,6 +3,7 @@
 using Restaurant.Moels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Restaurant.Models
 {
@@ -11,34 +12,37 @@ namespace Restaurant.Models
     {
         private Cook cook;
         List<string> resultOfCooks;
-        HashSet<string> customers; //TODO: We don't need this customers variable.
         private TableRequests tableRequests;
         Boolean sendedToCook = false;
         Boolean served = false;
-        public delegate void StopGetOrderDelegate(TableRequests table);
-        public event StopGetOrderDelegate StopOrders;//TODO: Is it Ready event? If yes, please rename it.
+        public delegate void ReadyDelagate(TableRequests table);
+        public event ReadyDelagate Ready;
 
         public Server()
         {
-            customers = new HashSet<string>();
             resultOfCooks = new List<string>();
             cook = new Cook();
             tableRequests = new TableRequests();
-            StopOrders += cook.Process;
+            cook.Processed += tableRequests => { Processed(tableRequests); };
+            Ready += cook.Process;
         }
-
-        //TODO: It's not good solution if this method's return type is Egg. It should be void (or maybe bool). 
-        public Egg Receive(string customerName, int chickenQuantity, int eggQuantity, object drink)
+ 
+        public void Receive(string customerName, int chickenQuantity, int eggQuantity, object drink)
         {
-            Egg egg = null;
             if (chickenQuantity > 0)
             {
-                tableRequests.Add<Chicken>(customerName);
+                foreach (var _ in Enumerable.Range(1, chickenQuantity))
+                {
+                    tableRequests.Add<Chicken>(customerName);
+                }
             }
 
             if (eggQuantity > 0)
             {
-                egg = tableRequests.Add<Egg>(customerName);
+                foreach (var _ in Enumerable.Range(1, eggQuantity))
+                {
+                    tableRequests.Add<Egg>(customerName);
+                }
             }
             if (drink is Drinks)
             {
@@ -60,11 +64,7 @@ namespace Restaurant.Models
                     tableRequests.Add<Tea>(customerName);
                 }
             }
-            customers.Add(customerName);
-            return egg;
         }
-
-        //TODO: Refactor this method to be smaller.
         public void SendToCook()
         {
             if (sendedToCook)
@@ -72,38 +72,34 @@ namespace Restaurant.Models
                 throw new Exception("already cooked!");
             }
             sendedToCook = true;
-            StopOrders?.Invoke(tableRequests);
+            Ready?.Invoke(tableRequests);
+        }
 
-            //TODO: You can move this part of code into Serve method, since it's related with serving
-            foreach (var customer in customers)
+        public void Processed(TableRequests tableRequests)
+        {
+            foreach (KeyValuePair<string, List<IMenuItem>> row in tableRequests)
             {
-                var orders = tableRequests[customer];
                 var ch = 0;
                 var e = 0;
                 Type t = null;
-                if (orders == null)
+
+                foreach (IMenuItem value in row.Value)
                 {
-                    continue;
-                }
-                foreach (var order in orders)
-                {
-                    if (order is Chicken)
+                    if (value is Chicken)
                     {
-                        var o = (Chicken)order;
-                        ch = o.GetQuantity();
+                        ch++;
                     }
-                    else if (order is Egg)
+                    else if (value is Egg)
                     {
-                        var o = (Egg)order;
-                        e = o.GetQuantity();
+                        e++;
                     }
-                    else if (order is IMenuItem)
+                    else if (value is Drink)
                     {
-                        t = order.GetType();
+                        t = value.GetType();
                     }
                 }
 
-                var str = $"Customer {customer} is served {ch} chicken, {e} egg, ";
+                var str = $"Customer {row.Key} is served {ch} chicken, {e} egg, ";
 
                 if (t != null)
                 {

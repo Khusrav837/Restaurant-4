@@ -3,8 +3,7 @@ using System;
 
 namespace Restaurant.Models
 {
-    //Slide #10 shown the class Hierarchy. There you can see that the Drink class should be base class for Tea, Pepsi,...casses.
-    public abstract class Drink : IMenuItem
+     public abstract class Drink : IMenuItem
     {
         abstract public void Obtain();
         abstract public void Serve();
