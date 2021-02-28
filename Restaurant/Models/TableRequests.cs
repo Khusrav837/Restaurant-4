@@ -1,6 +1,5 @@
 ﻿
 using Restaurant.Moels;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,6 +17,7 @@ namespace Restaurant.Models
                 items.Add(customerName, new List<IMenuItem> { });
             }
 
+            //TODO: To make this method smaller can you create a new instance of the menu based on OrderType?
             if (typeof(OrderType) == typeof(Chicken))
             {
                 items[customerName].Add(new Chicken(1));
@@ -48,6 +48,7 @@ namespace Restaurant.Models
         {
             get
             {
+                //TODO: what if the customerName doesn't exist in the items dictioanary?
                 return this.items[customerName];
             }
         }
@@ -65,6 +66,8 @@ namespace Restaurant.Models
 
         public IEnumerator GetEnumerator()
         {
+            //TODO: what about using this code instead of using foreach and yield  
+            //return items.GetEnumerator();  ??
             foreach (KeyValuePair<string, List<IMenuItem>> item in items)
             {
                 yield return item;
