@@ -10,7 +10,8 @@ namespace Restaurant
     /// </summary>
     public partial class MainWindow : Window
     {
-        Server Server = new Server();
+        Server server = new Server();
+        Cook cook = new Cook();
         public MainWindow()
         {
             InitializeComponent();
@@ -18,12 +19,9 @@ namespace Restaurant
             drinks.Items.Add(Drinks.Juice);
             drinks.Items.Add(Drinks.RC_Cola);
             drinks.Items.Add(Drinks.Coca_Cola);
+            server.Ready += cook.Process;
+            cook.Processed += (TableRequests table) => server.Processed(table);
         }
-
-        //TODO: Please fix these issues:
-        //I ordered 10 chickens, 12 eggs. But, after serving them to the customer it showing 1 chicken, 1 egg on the ResultBox. - FIXED.
-        //I tried to receive orders after served to customers. But it says "Customers already served!"          - NOT FIXED. Please fix this.
-        //There are 2 customers at the table. All of them ordered, but in resultbox only 1st of them shown.     - FIXED.
         private void getOrder_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -50,7 +48,7 @@ namespace Restaurant
                     throw new Exception("customerName Error!");
                 }
 
-                Server.Receive(customer, quantityChicken, quantityEgg, drink);
+                server.Receive(customer, quantityChicken, quantityEgg, drink);
             }
             catch (Exception ex)
             {
@@ -62,7 +60,7 @@ namespace Restaurant
         {
             try
             {
-                Server.SendToCook();
+                server.SendToCook();
             }
             catch (Exception ex)
             {
@@ -74,7 +72,7 @@ namespace Restaurant
         {
             try
             {
-                var resultOfCooks = Server.Serve();
+                var resultOfCooks = server.Serve();
                 foreach (var result in resultOfCooks)
                 {
                     Results.Items.Add(result);
@@ -85,6 +83,7 @@ namespace Restaurant
             {
                 Results.Items.Add(ex.Message);
             }
+            server.Clear();
         }
     }
 }

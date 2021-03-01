@@ -1,5 +1,6 @@
 ﻿
 using Restaurant.Moels;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,6 +19,9 @@ namespace Restaurant.Models
             }
 
             //TODO: To make this method smaller can you create a new instance of the menu based on OrderType?
+            //I would make smaller this method. I tried work with Activator or where OrderType: new() but I couldn't
+            // Becouse here is two type drink and food. Food has quantity constructor and Drink no 
+            //If you show me how to do it I will learn :)) i'm sorry
             if (typeof(OrderType) == typeof(Chicken))
             {
                 items[customerName].Add(new Chicken(1));
@@ -44,11 +48,19 @@ namespace Restaurant.Models
             }
         }
 
+        public void Clear()
+        {
+            items.Clear();
+        }
+
         public List<IMenuItem> this[string customerName]
         {
             get
             {
-                //TODO: what if the customerName doesn't exist in the items dictioanary?
+                if (!items.ContainsKey(customerName))
+                {
+                    throw new Exception("This customer didn't give order!");
+                }
                 return this.items[customerName];
             }
         }
@@ -66,12 +78,7 @@ namespace Restaurant.Models
 
         public IEnumerator GetEnumerator()
         {
-            //TODO: what about using this code instead of using foreach and yield  
-            //return items.GetEnumerator();  ??
-            foreach (KeyValuePair<string, List<IMenuItem>> item in items)
-            {
-                yield return item;
-            }
+            return items.GetEnumerator();
         }
     }
 }

@@ -10,7 +10,6 @@ namespace Restaurant.Models
 
     public class Server
     {
-        private Cook cook;
         List<string> resultOfCooks;
         private TableRequests tableRequests;
         Boolean sendedToCook = false;
@@ -21,30 +20,19 @@ namespace Restaurant.Models
         public Server()
         {
             resultOfCooks = new List<string>();
-            cook = new Cook();  //TODO: The purpose of using events is decoupling server and cook. Server should not know about cook and cook should not know about server.
             tableRequests = new TableRequests();
-            //TODO: Subscribing can be done in MainWindow.cs 
-            cook.Processed += tableRequests => { Processed(tableRequests); };
-            Ready += cook.Process;
         }
  
         public void Receive(string customerName, int chickenQuantity, int eggQuantity, object drink)
         {
-            //TODO: Do we need this "if" condition here?
-            if (chickenQuantity > 0)
+            foreach (var _ in Enumerable.Range(1, chickenQuantity))
             {
-                foreach (var _ in Enumerable.Range(1, chickenQuantity))
-                {
-                    tableRequests.Add<Chicken>(customerName);
-                }
+                tableRequests.Add<Chicken>(customerName);
             }
 
-            if (eggQuantity > 0)
+            foreach (var _ in Enumerable.Range(1, eggQuantity))
             {
-                foreach (var _ in Enumerable.Range(1, eggQuantity))
-                {
-                    tableRequests.Add<Egg>(customerName);
-                }
+                tableRequests.Add<Egg>(customerName);
             }
             if (drink is Drinks)
             {
@@ -66,13 +54,11 @@ namespace Restaurant.Models
                     tableRequests.Add<Tea>(customerName);
                 }
             }
+
+            sendedToCook = chickenQuantity > 0 || eggQuantity > 0 || drink != null;
         }
         public void SendToCook()
         {
-            if (sendedToCook)
-            {
-                throw new Exception("already cooked!");
-            }
             sendedToCook = true;
             Ready?.Invoke(tableRequests);
         }
@@ -113,6 +99,8 @@ namespace Restaurant.Models
                 }
                 resultOfCooks.Add(str);
             }
+            served = false;
+            tableRequests.Clear();
         }
 
         public List<string> Serve()
@@ -125,8 +113,12 @@ namespace Restaurant.Models
             {
                 throw new Exception("You didn't cook!");
             }
-            served = true;
             return resultOfCooks;
+        }
+
+        public void Clear()
+        {
+            resultOfCooks.Clear();
         }
     }
 
