@@ -13,6 +13,7 @@ namespace Restaurant.Models
         public event ProcessedDelegate Processed;
         public void Process(TableRequests table)
         {
+            //TODO: The Cook should not think about drinks because only the Server can obtain and server drinks. Cook may take only foods.
             var drinks = table.Get<Drink>();
             foreach (var drink in drinks)
             {

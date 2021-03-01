@@ -21,14 +21,16 @@ namespace Restaurant.Models
         public Server()
         {
             resultOfCooks = new List<string>();
-            cook = new Cook();
+            cook = new Cook();  //TODO: The purpose of using events is decoupling server and cook. Server should not know about cook and cook should not know about server.
             tableRequests = new TableRequests();
+            //TODO: Subscribing can be done in MainWindow.cs 
             cook.Processed += tableRequests => { Processed(tableRequests); };
             Ready += cook.Process;
         }
  
         public void Receive(string customerName, int chickenQuantity, int eggQuantity, object drink)
         {
+            //TODO: Do we need this "if" condition here?
             if (chickenQuantity > 0)
             {
                 foreach (var _ in Enumerable.Range(1, chickenQuantity))
