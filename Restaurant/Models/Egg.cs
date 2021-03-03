@@ -73,6 +73,19 @@ namespace Restaurant.Moels
 
         public override void Serve() { }
 
+        public override void Prepare()
+        {
+            this.Obtain();
+            try
+            {
+                this.Crack();
+            }
+            catch
+            {
+            }
+            this.Cook();
+        }
+
         ~Egg()
         {
             this.Dispose(false);

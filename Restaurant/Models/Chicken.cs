@@ -15,6 +15,13 @@ namespace Restaurant.Moels
 
         public override void Obtain() { }
 
+        public override void Prepare()
+        {
+            this.Obtain();
+            this.CutUp();
+            this.Cook();
+        }
+
         public override void Serve() { }
     }
 }

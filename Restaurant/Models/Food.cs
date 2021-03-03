@@ -12,7 +12,7 @@ namespace Restaurant.Models
         {
             return this.Quantity;
         }
-
+        public abstract void Prepare();
         public abstract void Obtain();
 
         public abstract void Serve();
