@@ -13,6 +13,7 @@ namespace Restaurant.Models
         public event ProcessedDelegate Processed;
         public void Process(TableRequests table)
         {
+            //TODO: Agar hamin proccessi puxtani chicken va egg-ro ba xudi classhoi Chicken va Egg implement kuned dar in metodi Process() code tamoman kam meshavad.
             var eggs = table.Get<Egg>();
             foreach (var o in eggs)
             {
