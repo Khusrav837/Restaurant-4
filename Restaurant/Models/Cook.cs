@@ -13,10 +13,16 @@ namespace Restaurant.Models
         public event ProcessedDelegate Processed;
         public void Process(TableRequests table)
         {
-            var foods = table.Get<Food>();
-            foreach (Food food in foods)
+            var eggs = table.Get<Egg>();
+            foreach (Egg egg in eggs)
             {
-                food.Prepare();
+                egg.Prepare();
+            }
+
+            var chickens = table.Get<Chicken>();
+            foreach (Chicken chicken in chickens)
+            {
+                chicken.Prepare();
             }
 
             Processed?.Invoke(table);
