@@ -1,9 +1,6 @@
-﻿
-using System;
-
-namespace Restaurant.Models
+﻿namespace Restaurant.Models
 {
-     public abstract class Drink : IMenuItem
+    public abstract class Drink : IMenuItem
     {
         abstract public void Obtain();
         abstract public void Serve();

@@ -25,7 +25,6 @@ namespace Restaurant.Moels
             set => _isDisposed = value;
         }
 
-
         public Egg(int quantity)
         {
             Random rand = new Random();
@@ -46,7 +45,7 @@ namespace Restaurant.Moels
             }
         }
 
-        public void DiscardShell() { }
+        private void DiscardShell() { }
 
         protected void Dispose(bool disposing)
         {

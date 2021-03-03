@@ -1,6 +1,4 @@
-﻿
-using Restaurant.Moels;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -18,34 +16,13 @@ namespace Restaurant.Models
                 items.Add(customerName, new List<IMenuItem> { });
             }
 
-            //TODO: To make this method smaller can you create a new instance of the menu based on OrderType?
-            //I would make smaller this method. I tried work with Activator or where OrderType: new() but I couldn't
-            // Becouse here is two type drink and food. Food has quantity constructor and Drink no 
-            //If you show me how to do it I will learn :)) i'm sorry
-            if (typeof(OrderType) == typeof(Chicken))
-            {
-                items[customerName].Add(new Chicken(1));
-            }
-            else if (typeof(OrderType) == typeof(Egg))
-            {
-                items[customerName].Add(new Egg(1));
-            }
-            else if (typeof(OrderType) == typeof(Coca_Cola))
-            {
-                items[customerName].Add(new Coca_Cola());
-            }
-            else if (typeof(OrderType) == typeof(Juice))
-            {
-                items[customerName].Add(new Juice());
-            }
-            else if (typeof(OrderType) == typeof(Tea))
-            {
-                items[customerName].Add(new Tea());
-            }
-            else if (typeof(OrderType) == typeof(RC_Cola))
-            {
-                items[customerName].Add(new RC_Cola());
-            }
+            IMenuItem menu;
+            if (typeof(OrderType).BaseType == typeof(Food))
+                menu = (IMenuItem)Activator.CreateInstance(typeof(OrderType), 1);
+            else
+                menu = (IMenuItem)Activator.CreateInstance(typeof(OrderType));
+
+            items[customerName].Add(menu);
         }
 
         public void Clear()
