@@ -48,7 +48,7 @@ namespace Restaurant.Models
 
             foreach (KeyValuePair<string, List<IMenuItem>> item in items)
             {
-                orders.AddRange(item.Value.FindAll(i => i.GetType() == typeof(OrderType)));
+                orders.AddRange(item.Value.FindAll(i => i is OrderType));
             }
             return orders;
         }
